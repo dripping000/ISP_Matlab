@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+
+### [DebugMK] ###
+*.raw
+*.yuv
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tif
+
+*.db
+
