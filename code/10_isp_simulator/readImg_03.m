@@ -8,7 +8,7 @@ switch im.type
     case {'raw', 'bin'}
         if im.bit_depth <= 8 && im.bit_depth > 0
             format = 'uint8';
-        elseif im.bit_depth <=16 && im.bit_depth>8
+        elseif im.bit_depth <= 16 && im.bit_depth > 8
             format = 'uint16';
         else
             error('im.bit error! Check your image bit!');
@@ -40,29 +40,29 @@ switch im.type
         
         % perform first time LUT
         % create LUT
-        LUT8 = uint8(bin2dec(fliplr(dec2bin(0:255,8))));
-        data=intlut(data,LUT8);
+        LUT8 = uint8(bin2dec(fliplr(dec2bin(0:255, 8))));
+        data = intlut(data, LUT8);
         
         % perform organization
         data = reshape(data, 8, []);
         data2 = zeros(6, size(data,2), 'uint16');
         data = uint16(data);
-        data2(1,:) = data(1,:)*4+uint16(floor(single(data(2,:))/64));
-        data2(2,:) = data(2,:)*16+uint16(floor(single(data(3,:))/16));
-        data2(3,:) = data(3,:)*64+uint16(floor(single(data(4,:))/4));
-        data2(4,:) = data(4,:)*256+data(5,:);
-        data2(5,:) = data(6,:)*4+uint16(floor(single(data(7,:))/64));
-        data2(6,:) = data(7,:)*16+uint16(floor(single(data(8,:))/16));
+        data2(1,:) = data(1,:)*4 + uint16(floor(single(data(2,:))/64));
+        data2(2,:) = data(2,:)*16 + uint16(floor(single(data(3,:))/16));
+        data2(3,:) = data(3,:)*64 + uint16(floor(single(data(4,:))/4));
+        data2(4,:) = data(4,:)*256 + data(5,:);
+        data2(5,:) = data(6,:)*4 + uint16(floor(single(data(7,:))/64));
+        data2(6,:) = data(7,:)*16 + uint16(floor(single(data(8,:))/16));
         
         data2 = mod(data2, 1024);
         % perform second time LUT
-        LUT10 = uint16(bin2dec(fliplr(dec2bin(0:1023,10))));
+        LUT10 = uint16(bin2dec(fliplr(dec2bin(0:1023, 10))));
         LUT16 = zeros(65536, 1, 'uint16');
         LUT16(1:1024) = LUT10;
         data2 = intlut(data2(:), LUT16);
         
         % reshape to proper size
-        img = reshape(data2,im.rawWidth, im.rawHeight);
+        img = reshape(data2, im.rawWidth, im.rawHeight);
         img = img';
         
     case 'mipi'
@@ -74,14 +74,14 @@ switch im.type
         widthNumBytes = ceil(im.rawWidth*5/4/stride)*stride;
         
         % read in data
-        data = fread(fid,widthNumBytes*im.rawHeight, '*uint8');
+        data = fread(fid, widthNumBytes*im.rawHeight, '*uint8');
         fclose(fid);
         
         % reshape data
-        data = reshape(data,widthNumBytes, im.rawHeight);
+        data = reshape(data, widthNumBytes, im.rawHeight);
         
         % extract every four of five bytes
-        img = data(mod(1:widthNumBytes,5)>0, :);
+        img = data(mod(1:widthNumBytes, 5)>0, :);
         img = img(1:im.rawWidth, :);
         
         % get P0
@@ -100,7 +100,7 @@ switch im.type
         imgExt4 = floor(imgExt/4);
         
         % cat P0-P3
-        imgLSB = cat(3,imgExt1, imgExt2, imgExt3, imgExt4);
+        imgLSB = cat(3, imgExt1, imgExt2, imgExt3, imgExt4);
         
         % permute to change storage sequence
         imgLSB = permute(imgLSB, [3,1,2]);
@@ -124,7 +124,7 @@ end
 if isfield(im, 'edge') && sum(im.edge) > 0
     img = img((im.edge(1)+1):(im.rawHeight-im.edge(2)), (im.edge(3)+1):(im.rawWidth-im.edge(4)));
 end
-    
+
 [im.height, im.width] = size(img);
 
 if strcmpi(im.cell, 'quad')
