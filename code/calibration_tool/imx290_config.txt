@@ -1,0 +1,14 @@
+Sensor name: imx290
+Image Type: raw
+Cell Type: Bayer
+Bayer Pattern: rggb
+Image Bit: 12
+Black level: 0
+Image width: 1920
+Image height: 1080
+Pixel size: 1.000
+input format: uint16
+output format: uint8
+bit shift: -4
+data format: ieee-be
+pixel offset: 0
